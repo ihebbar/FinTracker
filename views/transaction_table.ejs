@@ -1,0 +1,68 @@
+<div class="flex flex-col min-h-screen">
+  <%- include('partials/header.ejs') %>
+
+  <div class="ml-8 mr-8 mt-6">
+    <h3 class="title-text mb-5">Transaction History</h3>
+
+    <!-- Transaction Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">Type</th>
+            <th scope="col" class="px-6 py-3">Name</th>
+            <th scope="col" class="px-6 py-3">Amount</th>
+            <th scope="col" class="px-6 py-3">Category</th>
+            <th scope="col" class="px-6 py-3">Date</th>
+            <th scope="col" class="px-6 py-3">Recurrence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (transactions && transactions.length > 0) { %>
+            <% transactions.forEach(transaction => { %>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td class="px-6 py-4">
+                  <% if (transaction.type === 1) { %>
+                    <span class="text-green-500 font-semibold">Income</span>
+                  <% } else { %>
+                    <span class="text-red-500 font-semibold">Expense</span>
+                  <% } %>
+                </td>
+                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                  <%= transaction.name %>
+                </td>
+                <td class="px-6 py-4">
+                  <% if (transaction.type === 1) { %>
+                    <span class="text-green-600 font-semibold">+$<%= transaction.amount.toFixed(2) %></span>
+                  <% } else { %>
+                    <span class="text-red-600 font-semibold">-$<%= transaction.amount.toFixed(2) %></span>
+                  <% } %>
+                </td>
+                <td class="px-6 py-4">
+                  <%= transaction.category || 'Other' %>
+                </td>
+                <td class="px-6 py-4">
+                  <%= new Date(transaction.date).toLocaleDateString() %>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full 
+                    <%= transaction.recurrence === 'none' ? 'bg-gray-100 text-gray-800' : 'bg-blue-100 text-blue-800' %>">
+                    <%= transaction.recurrence.charAt(0).toUpperCase() + transaction.recurrence.slice(1) %>
+                  </span>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                No transactions found. Start logging your income and expenses!
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+    

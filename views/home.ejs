@@ -1,0 +1,14 @@
+<div class="flex flex-col min-h-screen">
+  <%- include('partials/header.ejs') %>
+
+  <div class="flex flex-row flex-nowrap">  
+    <div id="LeftColumn"class="basis-1/2 border-r-2 border-[#FFB300]">
+        <%- include('income-expense.ejs') %>
+    </div> 
+
+    <div id="RightColumn" class="basis-1/2 border-l-2 border-[#FFB300]">
+        <%- include('budget-saving.ejs') %>
+    </div>
+  </div>
+</div>
+

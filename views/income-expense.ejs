@@ -1,0 +1,278 @@
+<div>
+  <!-- for the pie-chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <h3 class="title-text ml-9 mt-4 mb-5">log transaction</h3>
+
+  <form action="/transactions" method="POST" class="w-6/7 ml-8 text-left">
+    <!-- income and expense buttons -->
+    <input type="hidden" name="type" id="transactionType" required>
+    <div class="inline-flex rounded-md shadow-xs mb-5 w-3/4" role="group">
+      <button type="button" id="incomeBtn" style="color: white;" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+        </svg>
+        <p class="para-text incomeTxt">&nbsp;&nbsp;&nbsp;Income&nbsp;&nbsp;&nbsp;</p>
+      </button>
+      <button type="button" id="expenseBtn" style="color: white;" class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
+        </svg>
+        <p class="para-text expenseTxt">&nbsp;&nbsp;&nbsp;Expense&nbsp;&nbsp;&nbsp;</p>
+      </button>
+    </div>
+
+    <!-- Custom Alert Box -->
+    <div id="toast" class="hidden fixed bottom-25 left-5 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg">
+      Please select Income or Expense.
+    </div>
+    
+    <script>
+      const transactionType = document.getElementById("transactionType");
+      const incomeBtn = document.getElementById("incomeBtn");
+      const expenseBtn = document.getElementById("expenseBtn");
+
+      // Income selected
+      incomeBtn.addEventListener("click", () => {
+        transactionType.value = "1";
+        incomeBtn.style.color = "#6495ED";
+        incomeBtn.style.color = "#6495ED";
+        expenseBtn.style.color = "white";      });
+
+      // Expense selected
+      expenseBtn.addEventListener("click", () => {
+        transactionType.value = "-1";
+        incomeBtn.style.color = "white";
+        expenseBtn.style.color = "#6495ED";
+      });
+
+      function showToast() {
+        const toast = document.getElementById("toast");
+        toast.classList.remove("hidden");
+        setTimeout(() => toast.classList.add("hidden"), 2000);
+      }
+
+      document.querySelector("form").addEventListener("submit", (e) => {
+        if (!transactionType.value) {
+          e.preventDefault();
+          showToast();
+        }
+  });
+
+    </script>
+
+    <!-- name, amount fields, category -->
+    <div class="flex gap-4 mb-5 w-full">
+      <div class="w-1/3">
+        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white para-text">
+          Transaction name
+        </label>
+        <input
+          type="text"
+          name="transactionName"
+          id="name"
+          class="bg-gray-50 border border-[#00FF88]-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Enter transaction name"
+          required
+        />
+      </div>
+      <div class="w-1/3">
+        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white para-text">
+          Transaction amount
+        </label>
+        <input
+          min="0"
+          type="number"
+          name="transactionAmount"
+          id="amount"
+          class="bg-gray-50 border border-[#00FF88]-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Enter transaction amount"
+          required
+        />
+      </div>
+      <div class="w-1/3 mt-7.5">
+        <input type="hidden" name="category" id="category">
+        <button
+          id="dropdownHoverButton"
+          data-dropdown-toggle="dropdownHover"
+          class="para-text bg-[#00FF88] hover:bg-[#00cc66] focus:ring-4 focus:outline-none focus:ring-[#00FF88] font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
+          style="color: black; font-weight: bold;"
+          type="button"
+        >
+          Category
+          <svg
+            class="w-2.5 h-2.5 ms-3 text-black"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        <!-- Dropdown menu -->
+        <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+          <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+            <li href="#" id="food" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Food
+            </li>
+            <li id="job" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Job
+            </li>
+            <li id="housing" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Housing
+            </li>
+            <li id="family" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Family
+            </li>
+            <li id="friends" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Friends
+            </li>
+            <li id="clo/cos" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Clothes/ Cosmetics
+            </li>
+            <li id="travel" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Travel/ Events
+            </li>
+            <li id="other" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+              Other
+            </li>
+          </ul>
+        </div>
+        <script>
+          // Select all the list items
+          const listItems = document.querySelectorAll("#dropdownHover li");
+
+          // Add event listener to each item
+          listItems.forEach((item) => {
+            item.addEventListener("click", () => {
+              // reset all items
+              listItems.forEach(li => li.style.color = "white");
+
+              // highlight clicked one
+              item.style.color = "#6495ED";
+
+              // set the category value
+              category.value = item.textContent.trim();
+            });
+          });
+          
+      </script>
+      </div>
+    </div>
+
+    <!-- Date, Recurring, submit and graph-->
+    <div class="grid grid-cols-2 gap-4">  
+
+      <div>
+        <!-- 01 -->
+        <!-- date -->
+        <div class="mb-5 w-5/6">
+          <label for="date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white para-text">Date</label>
+          <input name="date" type="date" id="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="XX/XX/20XX" />
+        </div>
+
+        <!-- recurrence -->
+        <input type="hidden" name="recurrence" id="recurrence">
+        <div class="inline-flex rounded-md shadow-xs mb-40 para-text" role="group">
+          <button type="button" id="daily" class="daily px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+            Daily
+          </button>
+          <button type="button" id="weekly" class="weekly px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border-t border-b border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+            Weekly
+          </button>
+          <button type="button" id="monthly" class="monthly px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+            Monthly
+          </button>
+          <script>
+            const recurrence = document.getElementById("recurrence");
+            const dailyBtn = document.getElementById("daily");
+            const weeklyBtn = document.getElementById("weekly");
+            const monthlyBtn = document.getElementById("monthly");
+            recurrence.value = "none";
+
+            dailyBtn.addEventListener("click", () => {
+              recurrence.value = "daily";
+              dailyBtn.style.color = "#6495ED";
+              weeklyBtn.style.color = "white";
+              monthlyBtn.style.color = "white";
+            });
+
+            weeklyBtn.addEventListener("click", () => {
+              recurrence.value = "weekly";
+              dailyBtn.style.color = "white";
+              weeklyBtn.style.color = "#6495ED";
+              monthlyBtn.style.color = "white";
+            });
+
+            monthlyBtn.addEventListener("click", () => {
+              recurrence.value = "monthly";
+              dailyBtn.style.color = "white";
+              weeklyBtn.style.color = "white";
+              monthlyBtn.style.color = "#6495ED";
+            });
+          </script>
+        </div>
+
+        <!-- submit button -->
+         <button
+          type="submit"
+          class="mb-13 para-text bg-[#00FF88] hover:bg-[#00cc66] focus:ring-4 focus:outline-none focus:ring-[#00FF88] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          style="color: black; font-weight: bold;">
+          Submit
+        </button>
+      </div>  
+
+      <div>
+        <!-- 02 -->
+        <div class="mt-0 flex justify-center items-center h-full">
+          <!-- pie chart -->
+            <canvas id="myPieChart" width="300" height="300"></canvas>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+              const ctx = document.getElementById('myPieChart').getContext('2d');
+              new Chart(ctx, {
+                type: 'pie',
+                data: {
+                  labels: ['Food', 'Housing', 'People', 'Self-Care', 'Travel', 'Other'],
+                  datasets: [{
+                      data: [<%= food %>, <%= housing %>, <%= people %>, <%= selfCare %>, <%= travel %>, <%= other %>],
+                    backgroundColor: ['#00FF88', '#FF6384', '#FFCE56', '#36A2EB', '#FF5733', '#FF8C00'],
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  responsive: false,
+                  plugins: {
+                    legend: {
+                      labels: { color: 'white' }
+                    }
+                  }
+                }
+              });
+            </script>
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+
+  <!-- scripting -->
+  <% if (messages.success) { %>
+  <script>
+    alert("<%= messages.success %>");
+  </script>
+  <% } %>
+</div>
+
+
+
+

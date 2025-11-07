@@ -1,0 +1,152 @@
+<div>
+  <h3 class="title-text ml-9 mt-4 mb-5">Budget & Savings</h3>
+
+  <div class="w-6/7 ml-8 text-left">
+    <!-- Weekly Budget Section -->
+    <div class="mb-8">
+      <h4 class="para-text text-xl font-semibold mb-4 ml-1">Weekly Budget</h4>
+      
+      <!-- Food Budget Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <span class="para-text font-medium">Food</span>
+          <span class="para-text text-sm">
+            $<%= budgetData.food.spent.toFixed(2) %> / $<%= budgetData.food.limit.toFixed(2) %>
+          </span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-6 dark:bg-gray-700">
+          <div 
+            class="h-6 rounded-full transition-all duration-300 <%= budgetData.food.percent >= 100 ? 'bg-red-500' : budgetData.food.percent >= 80 ? 'bg-yellow-500' : 'bg-[#00FF88]' %>"
+            style="width: <%= Math.min(100, budgetData.food.percent) %>%"
+          ></div>
+        </div>
+        <p class="para-text text-xs text-gray-400 mt-1">
+          Remaining: $<%= budgetData.food.remaining.toFixed(2) %>
+        </p>
+      </div>
+
+      <!-- Self-Care Budget Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <span class="para-text font-medium">Self-Care</span>
+          <span class="para-text text-sm">
+            $<%= budgetData.selfCare.spent.toFixed(2) %> / $<%= budgetData.selfCare.limit.toFixed(2) %>
+          </span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-6 dark:bg-gray-700">
+          <div 
+            class="h-6 rounded-full transition-all duration-300 <%= budgetData.selfCare.percent >= 100 ? 'bg-red-500' : budgetData.selfCare.percent >= 80 ? 'bg-yellow-500' : 'bg-[#00FF88]' %>"
+            style="width: <%= Math.min(100, budgetData.selfCare.percent) %>%"
+          ></div>
+        </div>
+        <p class="para-text text-xs text-gray-400 mt-1">
+          Remaining: $<%= budgetData.selfCare.remaining.toFixed(2) %>
+        </p>
+      </div>
+
+      <!-- Other Budget Bar -->
+      <div class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <span class="para-text font-medium">Other</span>
+          <span class="para-text text-sm">
+            $<%= budgetData.other.spent.toFixed(2) %> / $<%= budgetData.other.limit.toFixed(2) %>
+          </span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-6 dark:bg-gray-700">
+          <div 
+            class="h-6 rounded-full transition-all duration-300 <%= budgetData.other.percent >= 100 ? 'bg-red-500' : budgetData.other.percent >= 80 ? 'bg-yellow-500' : 'bg-[#00FF88]' %>"
+            style="width: <%= Math.min(100, budgetData.other.percent) %>%"
+          ></div>
+        </div>
+        <p class="para-text text-xs text-gray-400 mt-1">
+          Remaining: $<%= budgetData.other.remaining.toFixed(2) %>
+        </p>
+      </div>
+    </div>
+
+    <!-- Savings Section (lower half) -->
+    <div class="mt-8">
+      <h4 class="para-text text-xl font-semibold mb-4 ml-1">Savings</h4>
+      
+      <div class="flex gap-6">
+        <!-- Savings Amount (left) -->
+        <div class="flex-1">
+          <div class="bg-[#00FF88] rounded-lg p-6 shadow-lg">
+            <h5 class="para-text text-lg font-semibold mb-2" style="color: black;">Total Savings</h5>
+            <p class="para-text text-4xl font-bold" style="color: black;">
+              $<%= savingsData.total.toFixed(2) %>
+            </p>
+          </div>
+        </div>
+
+        <!-- Savings Goals (right) -->
+        <div class="flex-1">
+          <form action="/savings-goal" method="POST" class="mb-4">
+            <div class="flex gap-2 mb-3">
+              <input
+                type="text"
+                name="goalName"
+                placeholder="Goal name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block flex-1 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+              <input
+                type="number"
+                name="targetAmount"
+                placeholder="Amount"
+                min="0"
+                step="0.01"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-24 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+              <input
+                type="date"
+                name="targetDate"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-40 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
+              <button
+                type="submit"
+                class="para-text bg-[#00FF88] hover:bg-[#00cc66] focus:ring-4 focus:outline-none focus:ring-[#00FF88] font-medium rounded-lg text-sm px-4 py-2.5 text-center"
+                style="color: black; font-weight: bold;"
+                <%= (savingsData.goals && savingsData.goals.length >= 3) ? 'disabled' : '' %>
+              >
+                Add
+              </button>
+            </div>
+          </form>
+
+          <!-- Goals List -->
+          <div class="space-y-2">
+            <% if (savingsData.goals && savingsData.goals.length > 0) { %>
+              <% savingsData.goals.forEach(goal => { %>
+                <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 flex items-center justify-between">
+                  <div class="flex-1">
+                    <p class="para-text font-medium">
+                      <%= goal.goal_name %>
+                      <% if (goal.isAchieved) { %>
+                        <span class="ml-2">✅</span>
+                      <% } %>
+                    </p>
+                    <p class="para-text text-sm text-gray-600 dark:text-gray-400">
+                      $<%= goal.target_amount.toFixed(2) %>
+                      <% if (goal.target_date) { %>
+                        • <%= new Date(goal.target_date).toLocaleDateString() %>
+                      <% } %>
+                    </p>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <p class="para-text text-gray-400 text-sm">No savings goals yet. Add one above!</p>
+            <% } %>
+            <% if (savingsData.goals && savingsData.goals.length >= 3) { %>
+              <p class="para-text text-xs text-gray-400 mt-2">Maximum of 3 goals reached</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
