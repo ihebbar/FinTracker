@@ -1,6 +1,6 @@
-# Budgeting Plan - FinTrack
+# FinTracker - Budgeting Plan
 
-A personal budgeting and expense tracking web application built with Node.js, Express, and SQLite.
+A simple, user-friendly personal finance tracker to help you easily navigate your expenses! A personal budgeting and expense tracking web application built with Node.js, Express, and SQLite.
 
 ## Features
 
@@ -66,4 +66,3 @@ Project 2) Budgeting Plan/
 - The database file (`FinTracker.db`) is not included in the repository
 - Create your own database by running the application (tables are created automatically)
 - Default port is 3000 (can be changed via .env file)
-
